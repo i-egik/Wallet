@@ -9,8 +9,6 @@ public class StandartStorageManager implements Storage {
 
     @Override
     public void stockUser() {
-    try{
-        stockUserdir
 
     }
 
