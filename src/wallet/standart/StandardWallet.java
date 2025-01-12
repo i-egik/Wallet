@@ -4,11 +4,14 @@ import wallet.CategoryManager;
 import wallet.Wallet;
 
 import java.io.*;
+import java.text.NumberFormat;
+import java.text.ParseException;
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class StandardWallet implements Wallet {
 
@@ -61,9 +64,12 @@ public class StandardWallet implements Wallet {
                 }
 
                 history.add(new History(dt, categoryName, operation, money));
+                NumberFormat.getInstance(Locale.ENGLISH). parse(split[3]);
             }
         } catch (IOException e) {
             System.out.println(e);
+        } catch (ParseException e) {
+            throw new RuntimeException(e);
         }
     }
 
