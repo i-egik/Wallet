@@ -63,7 +63,7 @@ public class StandardWallet implements Wallet {
                 history.add(new History(dt, categoryName, operation, money));
             }
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            System.out.println(e);
         }
     }
 
