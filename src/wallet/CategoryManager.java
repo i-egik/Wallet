@@ -9,14 +9,14 @@ public interface CategoryManager {
     void delCategory(String userName, String categoryName);
 
     final class Category{
-        final String name;
+        public final String name;
 
         public Category(String name, double limit) {
             this.name = name;
             this.limit = limit;
         }
 
-        final double limit;
+        public final double limit;
 
     }
 

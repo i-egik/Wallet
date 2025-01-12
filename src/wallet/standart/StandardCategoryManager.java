@@ -4,57 +4,63 @@ import wallet.CategoryManager;
 
 import java.io.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-public class StandartCaregoryManager implements CategoryManager {
-    final List<Category> category = new ArrayList<>();
+public final class StandardCategoryManager implements CategoryManager {
+    final Map<String, Category> categories = new HashMap<>();
 
-
-    private String categoryName;
 
     @Override
     public List<Category> categories(String userName) {
-        File categories = new File("Categories");
-        try {
-            categories.createNewFile();
+        categories.clear();
+        try (BufferedReader reader = new BufferedReader(new FileReader(new File(userName, "categories.txt")))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                line = line.trim();
+                if (line.isEmpty()) {
+                    continue;
+                }
+                String[] split = line.split(":");
+                Category category = new Category(split[0].trim(), Double.parseDouble(split[1].trim()));
+                categories.put(category.name, category);
+            }
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return (List<Category>) categories;
+        return new ArrayList<>(categories.values());
     }
 
     @Override
     public void addCategory(String userName, String categoryName, double limit) {
-        File categoryDir = new File(categoryName);
-        if (categoryDir.exists()) {
-            throw new RuntimeException("Alrady exist");
-        }
-        try {
-            categoryDir.createNewFile();
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-        try (FileOutputStream addCategory = new FileOutputStream(new File(categoryName))) {
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-
+        categories.put(categoryName, new Category(categoryName, limit));
+        synchronize(userName);
     }
 
 
     @Override
     public void delCategory(String userName, String categoryName) {
-        File file = new File(categoryName);
+        categories.remove(categoryName);
+        synchronize(userName);
+    }
+
+    private void synchronize(String userName) {
+        File file = new File(userName, "categories.txt");
         if (file.exists()) {
             file.delete();
-        } throw new RuntimeException("Category is not available");
-
-
-
         }
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(file))) {
+            for (Category category : categories.values()) {
+                writer.append(String.format("%s:%f", category.name, category.limit));
+                writer.newLine();
+            }
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
     }
+}
 
 
 

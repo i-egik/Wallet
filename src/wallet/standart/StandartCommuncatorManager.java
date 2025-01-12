@@ -14,6 +14,6 @@ public class StandartCommuncatorManager implements Communicator {
     @Override
     public String outputStream() {
         System.out.println(inputStream());
-        return null;
+        return inputStream();
     }
 }
