@@ -8,9 +8,15 @@ public class Main {
     public static void main(String[] args) throws FileNotFoundException {
         UserManager userManager = new StandardUserManager();
         userManager.registration("Pepper", "papperpassword");
+
         UserManager.User user = userManager.authentication("Pepper", "papperpassword");
+
         user.manager.addCategory("Pepper", "salary", .0);
+        user.manager.delCategory("Pepper", "salary");
+
         user.wallet.addMoney(5000, "salary");
+        user.wallet.spendMoney(100, "beer");
+
         user.wallet.getBalance();
 
     }
