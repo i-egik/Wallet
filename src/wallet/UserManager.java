@@ -9,15 +9,15 @@ public interface UserManager {
     User authentication(String name, String password);
 
     final class User {
-        public User(String name, Wallet wallet, List<CategoryManager.Category> categorys) {
+        public User(String name, Wallet wallet, CategoryManager manager) {
             this.name = name;
             this.wallet = wallet;
-            this.categorys = categorys;
+            this.manager = manager;
         }
 
         final String name;
         final Wallet wallet;
-        final List<CategoryManager.Category> categorys;
+        final CategoryManager manager;
     }
 
 }

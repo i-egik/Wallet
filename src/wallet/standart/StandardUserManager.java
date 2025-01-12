@@ -35,6 +35,6 @@ public class StandardUserManager implements UserManager {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-        return new User(name, null, null);
+        return new User(name, new StandardWallet(name), new StandardCategoryManager());
     }
 }

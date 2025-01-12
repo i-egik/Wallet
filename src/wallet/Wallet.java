@@ -19,10 +19,10 @@ public interface Wallet {
     }
 
     final class History {
-        final LocalDateTime anyDate;
-        final String category;
-        final Operation operation;
-        final double money;
+        public final LocalDateTime anyDate;
+        public final String category;
+        public final Operation operation;
+        public final double money;
 
         public History(LocalDateTime anyDate, String category, Operation operation, double money) {
             this.anyDate = anyDate;
