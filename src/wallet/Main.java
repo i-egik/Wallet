@@ -11,31 +11,17 @@ import java.util.Scanner;
 
 public class Main {
     public static void main(String[] args) throws FileNotFoundException {
-
-        UserManager userManager = new StandardUserManager();
-        userManager.registration("Pepper", "papperpassword");
-
-        UserManager.User user = userManager.authentication("Pepper", "papperpassword");
-
-        user.manager.addCategory("Pepper", "salary", .0);
-        user.manager.delCategory("Pepper", "salary");
-        // добавить / снять бабосики
-        user.wallet.addMoney(5000, "salary");
-        user.wallet.spendMoney(100, "beer");
-
-        user.wallet.getBalance();
-
+        showMenu();
     }
 
-    final String showMenu() {
+    public static String showMenu() {
+
         UserManager userManager = new StandardUserManager();
         UserManager.User user = null;
         String command = null;
         try (Scanner scanner = new Scanner(System.in)) {
             while (!"exit".equals(command)) {
                 command = scanner.nextLine().trim();
-                Double spendMoney = null;
-                String categoryName = null;
                 if ("login".equals(command)) {
                     System.out.println("username ");
                     String username = scanner.nextLine().trim();
@@ -57,11 +43,32 @@ public class Main {
                     user.manager.delCategory(user.name, scanner.nextLine().trim());
                 } else if ("+".equals(command) && user != null) {
                     user.wallet.addMoney(scanner.nextDouble(), scanner.nextLine().trim());
-                } else if ("-".equals(command) && user != null && spendMoney < user.manager.getLimit(user.name, categoryName)) { //прописать чтоб товарищ не снял больше шекелей чем у него в загашнике
-                    categoryName = scanner.nextLine().trim();
-                    spendMoney = scanner.nextDouble();
-                    user.manager.getLimit(user.name, categoryName);
-                    user.wallet.spendMoney(scanner.nextDouble(), scanner.nextLine().trim());
+                } else if ("-".equals(command) && user != null) { //прописать чтоб товарищ не снял больше шекелей чем у него в загашнике
+                    String categoryName = scanner.nextLine().trim();
+                    double spendMoney = scanner.nextDouble();
+                    if (spendMoney < user.manager.getLimit(user.name, categoryName)) {
+                        user.wallet.spendMoney(spendMoney, categoryName);
+                    }
+                } else if ("history+".equals(command) && user != null) {
+                    user.wallet.getHistory(null, null, scanner.nextLine().trim(), Wallet.Operation.Add).forEach(history -> {
+                        System.out.println("+ " + history.anyDate + " " + history.money);
+                    });
+                } else if ("history-".equals(command) && user != null) {
+                    user.wallet.getHistory(null, null, scanner.nextLine().trim(), Wallet.Operation.Spend).forEach(history -> {
+                        System.out.println("- " + history.anyDate + " " + history.money);
+                    });
+                } else if ("total+".equals(command) && user != null) {
+                    double summAdd = 0;
+                    for (Wallet.History history : user.wallet.getHistory(null, null, null, Wallet.Operation.Add)) {
+                        summAdd += history.money;
+                    }
+                    System.out.println("total sum is " + summAdd);
+                } else if ("total-".equals(command) && user != null) {
+                    double summSpent = 0;
+                    for (Wallet.History history : user.wallet.getHistory(null, null, null, Wallet.Operation.Spend)) {
+                        summSpent += history.money;
+                    }
+                    System.out.println("total spent is " + summSpent);
                 }
             }
         } catch (FileNotFoundException e) {
@@ -69,6 +76,4 @@ public class Main {
         }
         return null;
     }
-
-
 }

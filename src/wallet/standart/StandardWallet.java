@@ -12,6 +12,7 @@ import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.stream.Stream;
 
 public class StandardWallet implements Wallet {
 
@@ -64,7 +65,7 @@ public class StandardWallet implements Wallet {
                 }
 
                 history.add(new History(dt, categoryName, operation, money));
-                NumberFormat.getInstance(Locale.ENGLISH). parse(split[3]);
+                NumberFormat.getInstance(Locale.ENGLISH).parse(split[3]);
             }
         } catch (IOException e) {
             System.out.println(e);
@@ -88,8 +89,17 @@ public class StandardWallet implements Wallet {
 
     @Override
     public List<History> getHistory(LocalDateTime fromDate, LocalDateTime toDate, String category, Operation operation) {
-        //TODO: Реализовать
-        return history;
+        Stream<History> stream = history.stream();
+        if (category != null) {
+            stream = stream.filter(history1 -> history1.category.equals(category));
+        }
+        if (operation != null) {
+            stream = stream.filter(history1 -> history1.operation.equals(operation));
+        }
+        if (fromDate != null) {
+            stream = stream.filter(history1 -> history1.anyDate.isAfter(fromDate));
+        }
+        return stream.toList();
     }
 
     @Override
