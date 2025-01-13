@@ -13,6 +13,14 @@ public final class StandardCategoryManager implements CategoryManager {
 
 
     @Override
+    public double getLimit(String userName, String categoryName) {
+        if(categories.containsKey(categoryName)){
+            return categories.get(categoryName).limit;
+        }
+        return 0;
+    }
+
+    @Override
     public List<Category> categories(String userName) {
         categories.clear();
         try (BufferedReader reader = new BufferedReader(new FileReader(new File(userName, "categories.txt")))) {

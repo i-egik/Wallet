@@ -56,7 +56,7 @@ public class StandardWallet implements Wallet {
                 LocalDateTime dt = dateLong(Long.parseLong(split[0].trim()));
                 String categoryName = split[1].trim();
                 Operation operation = Operation.valueOf(split[2].trim());
-                double money = Double.parseDouble(split[3].trim());
+                double money = NumberFormat.getInstance().parse(split[3].trim()).doubleValue();
                 if (operation == Operation.Add) {
                     value += money;
                 } else {
