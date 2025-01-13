@@ -22,6 +22,7 @@ public class Main {
         try (Scanner scanner = new Scanner(System.in)) {
             while (!"exit".equals(command)) {
                 command = scanner.nextLine().trim();
+
                 if ("login".equals(command)) {
                     System.out.println("username ");
                     String username = scanner.nextLine().trim();
